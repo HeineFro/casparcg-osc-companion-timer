@@ -234,7 +234,7 @@ mod tests {
         let now = Instant::now();
         let states = states_with(Some("AMB"), 3.9, 10.0, now);
         let up = binding(CountMode::Up, TimeFormat::MmSs);
-        assert_eq!(up.render(states.get(KEY), now), "AMB - 00:03");
+        assert_eq!(up.render(states.get(KEY), now), "AMB 00:03");
     }
 
     #[test]
@@ -243,13 +243,13 @@ mod tests {
         let down = binding(CountMode::Down, TimeFormat::MmSs);
 
         let states = states_with(Some("AMB"), 3.5, 10.0, now);
-        assert_eq!(down.render(states.get(KEY), now), "AMB - 00:07");
+        assert_eq!(down.render(states.get(KEY), now), "AMB 00:07");
 
         let states = states_with(Some("AMB"), 9.6, 10.0, now);
-        assert_eq!(down.render(states.get(KEY), now), "AMB - 00:01");
+        assert_eq!(down.render(states.get(KEY), now), "AMB 00:01");
 
         let states = states_with(Some("AMB"), 10.0, 10.0, now);
-        assert_eq!(down.render(states.get(KEY), now), "AMB - 00:00");
+        assert_eq!(down.render(states.get(KEY), now), "AMB 00:00");
     }
 
     #[test]
@@ -257,7 +257,7 @@ mod tests {
         let now = Instant::now();
         let states = states_with(Some("LIVE"), 5.0, 0.0, now);
         let down = binding(CountMode::Down, TimeFormat::HhMmSs);
-        assert_eq!(down.render(states.get(KEY), now), "LIVE - --:--:--");
+        assert_eq!(down.render(states.get(KEY), now), "LIVE --:--:--");
     }
 
     #[test]
@@ -280,8 +280,8 @@ mod tests {
         let states = states_with(Some("AMB"), 4.0, 10.0, now);
         let up = binding(CountMode::Up, TimeFormat::MmSs);
         let down = binding(CountMode::Down, TimeFormat::MmSs);
-        assert_eq!(up.render(states.get(KEY), now), "AMB - 00:04");
-        assert_eq!(down.render(states.get(KEY), now), "AMB - 00:06");
+        assert_eq!(up.render(states.get(KEY), now), "AMB 00:04");
+        assert_eq!(down.render(states.get(KEY), now), "AMB 00:06");
     }
 
     #[test]

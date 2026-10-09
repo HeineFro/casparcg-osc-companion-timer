@@ -238,7 +238,7 @@ mod tests {
         }
 
         // Six time updates, but only two distinct displayed seconds.
-        assert_eq!(texts(&sent), vec!["AMB - 00:01", "AMB - 00:02"]);
+        assert_eq!(texts(&sent), vec!["AMB 00:01", "AMB 00:02"]);
     }
 
     #[test]
@@ -252,8 +252,8 @@ mod tests {
         assert_eq!(
             *sent.lock().unwrap(),
             vec![
-                ("up1".to_owned(), "AMB - 00:04".to_owned()),
-                ("down1".to_owned(), "AMB - 00:06".to_owned()),
+                ("up1".to_owned(), "AMB 00:04".to_owned()),
+                ("down1".to_owned(), "AMB 00:06".to_owned()),
             ]
         );
     }
@@ -267,7 +267,7 @@ mod tests {
         engine.refresh(now + Duration::from_secs(5));
         engine.refresh(now + Duration::from_secs(6));
 
-        assert_eq!(texts(&sent), vec!["AMB - 00:09", ""]);
+        assert_eq!(texts(&sent), vec!["AMB 00:09", ""]);
     }
 
     #[test]
@@ -281,7 +281,7 @@ mod tests {
         engine.refresh(now);
 
         assert_eq!(texts(&sent).len(), 1);
-        assert_eq!(texts(&second), vec!["AMB - 00:09"]);
+        assert_eq!(texts(&second), vec!["AMB 00:09"]);
     }
 
     #[test]
@@ -295,7 +295,7 @@ mod tests {
 
         let sent = sent.lock().unwrap();
         assert_eq!(sent.len(), 2);
-        assert_eq!(sent[1], ("timer2".to_owned(), "AMB - 00:09".to_owned()));
+        assert_eq!(sent[1], ("timer2".to_owned(), "AMB 00:09".to_owned()));
     }
 
     #[test]

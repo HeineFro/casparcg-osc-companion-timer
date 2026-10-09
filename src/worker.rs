@@ -32,7 +32,10 @@ impl Worker {
                 .name("caspar-osc-in".into())
                 .spawn(move || run(socket, engine, stop))?
         };
-        Ok(Self { stop, handle: Some(handle) })
+        Ok(Self {
+            stop,
+            handle: Some(handle),
+        })
     }
 }
 
@@ -92,7 +95,10 @@ mod tests {
     }
 
     fn send(socket: &UdpSocket, port: u16, addr: &str, args: Vec<OscType>) {
-        let packet = OscPacket::Message(OscMessage { addr: addr.into(), args });
+        let packet = OscPacket::Message(OscMessage {
+            addr: addr.into(),
+            args,
+        });
         socket
             .send_to(&encoder::encode(&packet).unwrap(), ("127.0.0.1", port))
             .unwrap();
@@ -110,27 +116,52 @@ mod tests {
         let engine = Arc::new(Mutex::new(engine));
 
         // Find a free port by binding and releasing it again.
-        let port = UdpSocket::bind("127.0.0.1:0").unwrap().local_addr().unwrap().port();
+        let port = UdpSocket::bind("127.0.0.1:0")
+            .unwrap()
+            .local_addr()
+            .unwrap()
+            .port();
         let worker = Worker::start(port, Arc::clone(&engine)).unwrap();
 
         let sender = UdpSocket::bind("127.0.0.1:0").unwrap();
-        send(&sender, port, "/channel/1/stage/layer/10/foreground/file/name",
-            vec![OscType::String("AMB".into())]);
-        send(&sender, port, "/channel/1/stage/layer/10/foreground/file/time",
-            vec![OscType::Float(2.0), OscType::Float(10.0)]);
+        send(
+            &sender,
+            port,
+            "/channel/1/stage/layer/10/foreground/file/name",
+            vec![OscType::String("AMB".into())],
+        );
+        send(
+            &sender,
+            port,
+            "/channel/1/stage/layer/10/foreground/file/time",
+            vec![OscType::Float(2.0), OscType::Float(10.0)],
+        );
         // A layer without a binding:
-        send(&sender, port, "/channel/1/stage/layer/11/foreground/file/name",
-            vec![OscType::String("IGNORED".into())]);
+        send(
+            &sender,
+            port,
+            "/channel/1/stage/layer/11/foreground/file/name",
+            vec![OscType::String("IGNORED".into())],
+        );
 
         let deadline = Instant::now() + Duration::from_secs(2);
-        while sent.lock().unwrap().last().map(String::as_str) != Some("AMB - 00:08")
+        while sent.lock().unwrap().last().map(String::as_str) != Some("AMB 00:08")
             && Instant::now() < deadline
         {
             thread::sleep(Duration::from_millis(20));
         }
         drop(worker);
 
-        assert_eq!(sent.lock().unwrap().last().map(String::as_str), Some("AMB - 00:08"));
-        assert!(!engine.lock().unwrap().watches(crate::layer_state::LayerKey { channel: 1, layer: 11 }));
+        assert_eq!(
+            sent.lock().unwrap().last().map(String::as_str),
+            Some("AMB 00:08")
+        );
+        assert!(!engine
+            .lock()
+            .unwrap()
+            .watches(crate::layer_state::LayerKey {
+                channel: 1,
+                layer: 11
+            }));
     }
 }
