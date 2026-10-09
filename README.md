@@ -4,8 +4,6 @@ A small desktop app that listens to CasparCG's OSC output and writes the
 **clip name and/or time** of selected channel/layers into **Bitfocus Companion
 custom variables**. Show them on any button with `$(custom:<name>)`.
 
-Test - Win 11 -OK linux - pending - MacOS -pending
-
 ```
 CasparCG --OSC/UDP--> casparcg-osc-companion-timer --OSC/UDP--> Companion
                       (filters, counts, dedupes)               /custom-variable/<name>/value
@@ -16,8 +14,9 @@ Example result on a button: `AMB - 00:07` (clip name, time remaining).
 ## Requirements
 
 - **Rust 1.85 or newer** (to build)
-- **Windows** (used and tested) or **Linux** (builds and passes the test
-  suite). Any desktop that eframe/egui supports.
+- **Windows** (used and tested), **Linux** and **macOS** (Apple Silicon): builds
+  are provided with each release, but they have **not been tested yet**.
+  Please report problems.
 - **CasparCG** with OSC output enabled
 - **Bitfocus Companion** with its OSC listener enabled
 
@@ -38,6 +37,13 @@ cargo run --release
 
 The built program is `target/release/casparcg-osc-companion-timer`
 (`.exe` on Windows). Tests: `cargo test`
+
+### macOS notes
+
+The macOS build is not signed or notarised, so macOS may refuse to open it
+("developer cannot be verified"). Extract the archive and run it from
+Terminal, or allow it under System Settings > Privacy & Security. It is a
+plain executable, not an `.app` bundle, and only for Apple Silicon (arm64).
 
 ## Settings
 
