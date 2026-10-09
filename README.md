@@ -114,7 +114,7 @@ The text is built from the options you switched on:
 
 | Clip name | Time | Text |
 |-----------|------|------|
-| on | on | `AMB - 00:07` |
+| on | on | `AMB 00:07` |
 | on | off | `AMB` |
 | off | on | `00:07` |
 | off | off | nothing is sent (the binding shows a red message) |
