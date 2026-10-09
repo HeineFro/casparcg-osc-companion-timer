@@ -1,0 +1,12 @@
+[package]
+name = "casparcg-osc-companion-timer"
+version = "0.1.0"
+edition = "2021"
+description = "Turns CasparCG OSC (clip name + time per channel/layer) into Bitfocus Companion custom variables"
+
+[dependencies]
+eframe = "0.27"
+rosc = "0.10"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs = "5"
