@@ -4,6 +4,8 @@ A small desktop app that listens to CasparCG's OSC output and writes the
 **clip name and/or time** of selected channel/layers into **Bitfocus Companion
 custom variables**. Show them on any button with `$(custom:<name>)`.
 
+Test - Win 11 -OK linux - pending - MacOS -pending
+
 ```
 CasparCG --OSC/UDP--> casparcg-osc-companion-timer --OSC/UDP--> Companion
                       (filters, counts, dedupes)               /custom-variable/<name>/value
@@ -14,32 +16,39 @@ Example result on a button: `AMB - 00:07` (clip name, time remaining).
 ## Requirements
 
 - **Rust 1.85 or newer** (to build)
-- **Linux** with a desktop that eframe/egui supports (X11 or Wayland)
+- **Windows** (used and tested) or **Linux** (builds and passes the test
+  suite). Any desktop that eframe/egui supports.
 - **CasparCG** with OSC output enabled
 - **Bitfocus Companion** with its OSC listener enabled
 
 ### Companion version
 
+Tested with **Companion 5.0.0** on Windows.
+
 The app uses one Companion feature: the OSC command
 `/custom-variable/<name>/value <text>`, described on the *OSC control* page of
-the Companion user guide. It does not depend on how buttons are drawn, so it
-does not matter which button layout your Companion version uses.
+the Companion user guide. It does not depend on how buttons are drawn. If your
+version behaves differently, check that page of the user guide first.
 
-Tested with Companion version: `<fill in>`
-
-If your version behaves differently, check that page of the user guide for
-your version first.
-
-## Build
+## Build and run
 
 ```sh
 cargo run --release
 ```
 
-Tests: `cargo test`
+The built program is `target/release/casparcg-osc-companion-timer`
+(`.exe` on Windows). Tests: `cargo test`
 
-Settings are saved automatically to
-`~/.config/casparcg-osc-companion-timer/config.json`.
+## Settings
+
+You enter everything in the app (see Setup below). Your settings are remembered
+between runs in a `config.json` file that the app writes by itself, so there is
+nothing to edit by hand:
+
+- Windows: `%APPDATA%\casparcg-osc-companion-timer\config.json`
+- Linux: `~/.config/casparcg-osc-companion-timer/config.json`
+
+Delete that file to reset the app to its defaults.
 
 ## Setup
 
@@ -70,8 +79,8 @@ the config.
    port (default `12321`).
 2. Create one **custom variable** per binding, for example `timer1`. Create it
    before you start sending.
-3. On a button, show the variable in the button text: `$(custom:timer1)`.
-   In Companion 5 that is the button's text element.
+3. On a button, show the variable in the button's text element:
+   `$(custom:timer1)`.
 
 ### 3. The app
 
@@ -144,8 +153,9 @@ A red message under a binding means it sends nothing until you fix it:
   *string* argument. If that does not work either, the problem is in Companion
   (OSC listener disabled, wrong port, firewall, variable not created, or the
   button does not show `$(custom:timer1)`).
-- **Companion is on another machine.** Use its IP in *Companion OSC*, and allow
-  the UDP port through its firewall.
+- **Companion or CasparCG is on another machine.** Use the right IP in the app
+  and in `casparcg.config`, and allow the UDP ports through the firewall
+  (Windows Firewall may ask the first time the app receives data).
 - **"Cannot listen on UDP port ..."**: another program already uses the port.
 - **Everything is empty at startup.** That is expected: a binding clears its
   variable until the layer reports a clip.
